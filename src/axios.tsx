@@ -11,7 +11,6 @@ instance.interceptors.request.use(
             if (localStorage) {
                 const parsedStorage = JSON.parse(localStorage)
                 const { token } = parsedStorage
-                console.log('token nè', token)
                 if (token && token !== '') {
                     config.headers.Authorization = `Bearer ${token}`
                 } else {
