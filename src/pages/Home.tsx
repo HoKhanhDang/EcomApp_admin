@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 //redux
@@ -33,7 +33,7 @@ export default function Admin() {
     const { isLogin, products } = useSelector((state) => state.admin)
     const [rs, setRs] = useState<any>(null)
     const [sortedProducts, setSortedProducts] = useState<any>(null)
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         const rs = await Promise.all([
             apiGetTotalIncomeLastMonth(),
             apiGetTotalIncomeThisMonth(),
@@ -48,14 +48,10 @@ export default function Admin() {
             apiGetTopSellingCategoryLastMonth(),
             apiGetTopSellingBrandLastMonth()
         ])
+        const arr = [...(products || [])].sort((a: any, b: any) => b.sold - a.sold)
         setRs(rs)
-    }
-    const sortProducts = () => {
-        const arr = [...(products || [])].sort((a: any, b: any) => {
-            return b.sold - a.sold
-        })
         setSortedProducts(arr?.slice(0, 5))
-    }
+    }, [products])
     useEffect(() => {
         const timer = setTimeout(() => {
             if (isLogin === false) {
@@ -63,10 +59,10 @@ export default function Admin() {
             }
             dispatch(getAllProducts())
             dispatch(getAllUsers())
-            dispatch(getAllOrders())        
+            dispatch(getAllOrders())
+
             fetchData()
-            sortProducts()
-        }, 300)
+        }, 100)
 
         return () => clearTimeout(timer)
     }, [])
