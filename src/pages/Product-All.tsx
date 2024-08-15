@@ -4,7 +4,7 @@ import Sidebar from '../components/common/sidebar'
 import FilterBar from '../components/common/filterbar'
 //react
 import { useSelector, useDispatch } from 'react-redux'
-import { useEffect } from 'react'
+import { memo, useEffect, useRef, useCallback } from 'react'
 import { setCurrentPage, setTotalPages } from '../redux/product/productSlide'
 import { getAllProducts } from '../redux/admin/adminActions'
 import { useNavigate } from 'react-router-dom'
@@ -17,50 +17,63 @@ import Swal from 'sweetalert2'
 //api
 import { apiDeleteProduct } from '../apis/productApi'
 
-export default function Products() {
+const Products = memo(function Products() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    // Ref to keep track of render count
+    const renderCount = useRef(0)
+    renderCount.current += 1
+
+    useEffect(() => {
+        console.log(`FilterBar has rendered ${renderCount.current} times`)
+    })
     //paging
     const { currentPage, totalPages, productsSorted } = useSelector((state) => state.product)
     const { products } = useSelector((state) => state.admin)
     useEffect(() => {
         dispatch(setCurrentPage(1))
-        dispatch(getAllProducts())
-        dispatch(setTotalPages(Math.ceil(parseFloat(products?.length / limitPage))))
-    }, [])
+        dispatch(setTotalPages(Math.ceil(products?.length / limitPage)))
+    }, [dispatch, products?.length])
 
-    const handleEdit = (id: string) => {
-        navigate(`/products/edit/${id}`)
-    }
-    const handleDelete = (id: string) => {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'Do you want to delete it!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes!'
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    await apiDeleteProduct(id)
-                    dispatch(getAllProducts())
-                } catch (error) {
+    const handleEdit = useCallback(
+        (id: string) => {
+            navigate(`/products/edit/${id}`)
+        },
+        [navigate]
+    )
+
+    const handleDelete = useCallback(
+        (id: string) => {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to delete it!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes!'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        await apiDeleteProduct(id)
+                        dispatch(getAllProducts())
+                    } catch (error) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Something went wrong!',
+                            icon: 'error'
+                        })
+                    }
                     Swal.fire({
-                        title: 'Error',
-                        text: 'Something went wrong!',
-                        icon: 'error'
+                        title: 'Completed',
+                        text: 'Your product has been successfully deleted.',
+                        icon: 'success'
                     })
                 }
-                Swal.fire({
-                    title: 'Completed',
-                    text: 'Your product has been successfully deleted.',
-                    icon: 'success'
-                })
-            }
-        })
-    }
+            })
+        },
+        [dispatch]
+    )
     return (
         <div className=' w-screen h-screen bg-main-bg font-main grid grid-cols-6 grid-rows-12'>
             <Sidebar />
@@ -166,4 +179,5 @@ export default function Products() {
             </div>
         </div>
     )
-}
+})
+export default Products
