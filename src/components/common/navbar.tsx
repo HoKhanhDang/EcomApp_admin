@@ -3,7 +3,7 @@ import { logout } from '../../redux/admin/adminSlide'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { path } from '../../ultils/path'
-import { useState } from 'react'
+import { useState, memo } from 'react'
 
 //MUI
 import Button from '@mui/material/Button'
@@ -13,7 +13,7 @@ import MenuItem from '@mui/material/MenuItem'
 import { HiDotsVertical } from 'react-icons/hi'
 import { TbLogout } from 'react-icons/tb'
 
-export default function Navbar() {
+const Navbar = () => {
     const { current } = useSelector((state) => state.admin)
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -73,3 +73,5 @@ export default function Navbar() {
         </div>
     )
 }
+
+export default memo(Navbar)
