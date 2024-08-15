@@ -1,5 +1,4 @@
 //icon
-
 import { IoIosArrowBack, IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineSpaceDashboard, MdOutlineShoppingBag } from 'react-icons/md'
 import { FiUsers } from 'react-icons/fi'
@@ -11,8 +10,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setPage } from '../../redux/pageSlide'
 
 import { navItems } from '../../ultils/constant'
+import { memo } from 'react'
 
-export default function Sidebar() {
+const Sidebar = () => {
     const dispatch = useDispatch()
     const { pageIndex } = useSelector((state) => state.page)
     const getClassName = (isActive: boolean, link: string): string => {
@@ -104,3 +104,5 @@ export default function Sidebar() {
         </div>
     )
 }
+
+export default memo(Sidebar)
