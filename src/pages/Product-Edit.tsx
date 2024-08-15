@@ -1,5 +1,5 @@
 //React
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Navbar from '../components/common/navbar'
 import Sidebar from '../components/common/sidebar'
 import { useParams } from 'react-router-dom'
@@ -41,7 +41,6 @@ const VisuallyHiddenInput = styled('input')({
 })
 export default function EditProduct() {
     const { pid } = useParams()
-    console.log(typeof pid)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     //content
     const [title, setTitle] = useState<string>('')
@@ -59,10 +58,9 @@ export default function EditProduct() {
     //image
     const [hoverIndex, setHoverIndex] = useState<number | null>(null)
     const [selectedFiles, setSelectedFiles] = useState<Array<File>>([])
-    //fetch product
-    const fetchProduct = async () => {
+
+    const fetchData = useCallback(async () => {
         const rs = await apiGetProductById(pid)
-        console.log('rs', rs)
         if (rs) {
             setTitle(rs?.data?.res?.title)
             setDescription(rs?.data?.res?.description)
@@ -74,20 +72,15 @@ export default function EditProduct() {
             setPrice(rs?.data?.res?.price)
             setImage(rs?.data?.res?.image)
         }
-    }
-    //fetch brand and category list
-    const fetchBrandAndCategory = async () => {
         const [brand, category] = await Promise.all([apiGetBrand(), apiGetCategory()])
         if (brand && category) {
             setListBrand(brand?.data?.res)
             setListCategory(category?.data?.res)
         }
-    }
-    useEffect(() => {
-        fetchProduct()
-        fetchBrandAndCategory()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+    useEffect(() => {
+        fetchData()
+    }, [pid])
     const onSubmit = async () => {
         //check empty
         if (
@@ -144,8 +137,8 @@ export default function EditProduct() {
 
                     setIsLoading(false)
                     setTimeout(() => {
-                        window.location.reload()
-                    }, 2000)
+                        window.history.back()
+                    }, 1000)
                 } catch (error) {
                     setIsLoading(false)
                     toast.error('Failed')
