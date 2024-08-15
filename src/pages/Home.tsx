@@ -63,10 +63,10 @@ export default function Admin() {
             }
             dispatch(getAllProducts())
             dispatch(getAllUsers())
-            dispatch(getAllOrders())
-            sortProducts()
+            dispatch(getAllOrders())        
             fetchData()
-        }, 100)
+            sortProducts()
+        }, 300)
 
         return () => clearTimeout(timer)
     }, [])
@@ -79,7 +79,7 @@ export default function Admin() {
             </div>
             <div className=' col-span-5 row-span-11 w-full h-full px-5 bg-main-bg flex flex-col gap-2 pb-[20px]'>
                 {rs && <Dashboard rs={rs} />}
-                {products && <DisplayTopProduct data={sortedProducts} />}
+                {sortedProducts && <DisplayTopProduct data={sortedProducts} />}
             </div>
         </div>
     )
