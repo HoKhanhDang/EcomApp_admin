@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback, memo, useRef } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import Select from 'react-select'
 //redux
@@ -14,7 +14,7 @@ import { colors, contantsSort, limitPage } from '../../ultils/constant'
 import { apiGetProduct } from '../../apis/productApi'
 import { apiGetCategory } from '../../apis/categoryApi'
 
-export default function FilterBar() {
+const FilterBar = memo(function FilterBar() {
     const [selectedSort, setSelectedSort] = useState<any>(null)
     const [selectedCategory, setSelectedCategory] = useState<any>(null)
     const [params] = useSearchParams()
@@ -22,43 +22,62 @@ export default function FilterBar() {
     const { currentPage } = useSelector((state) => state.product)
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const handleSelectColor = (e: any) => {
-        if (e === null) {
+    const debounceTimeout = useRef<NodeJS.Timeout | null>(null)
+    const handleSelectColor = useCallback(
+        (e: any) => {
+            if (e === null) {
+                params.delete('color')
+                navigate(`?${params.toString()}`)
+                return
+            }
             params.delete('color')
+            e.forEach((item: any) => {
+                params.append('color', item.label)
+            })
             navigate(`?${params.toString()}`)
-            return
-        }
-        params.delete('color')
-        e.forEach((item: any) => {
-            params.append('color', item.label)
-        })
-        navigate(`?${params.toString()}`)
-    }
-    const handleSearch = (e: any) => {
-        if (e.target.value === '') {
-            params.delete('search')
-            navigate(`?${params.toString()}`)
-            return
-        }
+        },
+        [params, navigate]
+    )
 
-        params.set('search', e.target.value)
-        navigate(`?${params.toString()}`)
-    }
-    const handleSelectCategory = (e: any) => {
-        if (e?.label === undefined) {
-            params.delete('category')
+    const handleSearch = useCallback(
+        (e: any) => {
+            if (debounceTimeout.current) {
+                clearTimeout(debounceTimeout.current)
+            }
+
+            debounceTimeout.current = setTimeout(() => {
+                if (e.target.value === '') {
+                    params.delete('search')
+                    navigate(`?${params.toString()}`)
+                    return
+                }
+
+                params.set('search', e.target.value)
+                navigate(`?${params.toString()}`)
+            }, 300)
+        },
+        [params, navigate]
+    )
+
+    const handleSelectCategory = useCallback(
+        (e: any) => {
+            if (e?.label === undefined) {
+                params.delete('category')
+                navigate(`?${params.toString()}`)
+                return
+            }
+            params.set('category', e?.label)
             navigate(`?${params.toString()}`)
-            return
-        }
-        params.set('category', e?.label)
-        navigate(`?${params.toString()}`)
-    }
-    const fetchCategory = async () => {
+        },
+        [params, navigate]
+    )
+
+    const fetchCategory = useCallback(async () => {
         const res = await apiGetCategory()
-
         setSelectedCategory(res.data.res.map((item: any) => ({ value: item._id, label: item.title })))
-    }
-    const fetchData = async () => {
+    }, [])
+
+    const fetchData = useCallback(async () => {
         const length = products?.length
         if (length == 0) {
             dispatch(setTotalPages(1))
@@ -89,7 +108,7 @@ export default function FilterBar() {
 
             dispatch(setProducts(paging?.data.res))
         }
-    }
+    }, [products, params, currentPage, dispatch])
     useEffect(() => {
         fetchData()
         dispatch(setCurrentPage(1))
@@ -189,4 +208,6 @@ export default function FilterBar() {
             </div>
         </div>
     )
-}
+})
+
+export default FilterBar
