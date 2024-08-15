@@ -117,7 +117,7 @@ export default function AddProduct() {
             toast.success('Add product success', { autoClose: 2000 })
             setTimeout(() => {
                 setIsLoading(false)
-                window.location.reload()
+                window.history.back()
             }, 2000)
         } catch (error) {
             setIsLoading(false)
