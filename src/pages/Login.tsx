@@ -70,7 +70,7 @@ const Login = () => {
     return (
         <>
             {isLoading && (
-                <div className="w-screen h-screen z-50 absolute bg-blue-200 flex justify-center items-center">
+                <div className="w-screen h-screen opacity-50 z-50 absolute bg-blue-200 flex justify-center items-center">
                     <LuLoader2
                         variant="soft"
                         className="animate-spin text-[40px]"
