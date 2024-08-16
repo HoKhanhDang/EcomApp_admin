@@ -111,6 +111,11 @@ const Login = () => {
                         </button>
                     </div>
                 </div>
+                <div className='fixed bottom-5 w-[300px] h-[150px] right-5 flex flex-col border border-green-500 justify-center items-center'>
+                    <span>Test Account</span>
+                    <span className='text-[15px]'>Email: usd96011@tccho.com </span>
+                    <span className='text-[15px]'>Password: 12 </span>
+                </div>
             </div>
         </>
     )
