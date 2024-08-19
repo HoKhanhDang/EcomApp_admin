@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { path } from './ultils/path'
-import { Home, Product, AddProduct, EditProduct, Member, Categories, Brands, Order, Login } from './pages'
+import { Home, Product, AddProduct, EditProduct, Member, Categories, Brands, Order, Login, Chat } from './pages'
 import { useSelector } from 'react-redux'
 
 const App: FC = () => {
@@ -18,6 +18,7 @@ const App: FC = () => {
                     ) : (
                         <>
                             <Route path={path.admin.home} element={<Home />} />
+                            <Route path={path.admin.chat} element={<Chat />} />
                             <Route path={path.admin.orders} element={<Order />} />
                             <Route path={path.admin.products.all} element={<Product />} />
                             <Route path={path.admin.products.add} element={<AddProduct />} />

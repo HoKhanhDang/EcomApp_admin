@@ -1,2 +1,5 @@
 node_modules/
 dist/
+
+# Ignore a specific file
+src/components/chat/AgentChat.jsx

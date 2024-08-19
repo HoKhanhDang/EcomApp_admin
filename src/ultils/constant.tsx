@@ -159,6 +159,12 @@ const navItems: {
                 link: '/customers/all'
             }
         ]
+    },
+    {
+        id: 5,
+        title: 'Chat',
+        icon: '',
+        link: '/chat'
     }
 ]
 

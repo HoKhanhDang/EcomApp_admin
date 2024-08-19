@@ -8,7 +8,7 @@ import { adminApi } from '../apis/adminApi'
 import { useNavigate } from 'react-router-dom'
 import { path } from '../ultils/path'
 //MUI
-import { LuLoader2 } from "react-icons/lu";
+import { LuLoader2 } from 'react-icons/lu'
 
 const Login = () => {
     const [email, setEmail] = useState('')
@@ -70,11 +70,8 @@ const Login = () => {
     return (
         <>
             {isLoading && (
-                <div className="w-screen h-screen opacity-50 z-50 absolute bg-blue-200 flex justify-center items-center">
-                    <LuLoader2
-                        variant="soft"
-                        className="animate-spin text-[40px]"
-                    />
+                <div className='w-screen h-screen opacity-50 z-50 absolute bg-blue-200 flex justify-center items-center'>
+                    <LuLoader2 variant='soft' className='animate-spin text-[40px]' />
                 </div>
             )}
             <div className='w-screen h-screen flex items-center justify-center bg-[#F0F0F1]'>

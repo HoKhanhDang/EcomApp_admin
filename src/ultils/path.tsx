@@ -1,5 +1,6 @@
 export const path = {
     admin: {
+        chat: '/chat',
         login: '/login',
         home: '/',
         products: {

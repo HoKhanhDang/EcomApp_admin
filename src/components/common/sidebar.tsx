@@ -3,6 +3,7 @@ import { IoIosArrowBack, IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineSpaceDashboard, MdOutlineShoppingBag } from 'react-icons/md'
 import { FiUsers } from 'react-icons/fi'
 import { RiBox1Line } from 'react-icons/ri'
+import { IoChatboxEllipsesOutline } from 'react-icons/io5'
 
 import logo from '../../assets/logo.png'
 import { NavLink } from 'react-router-dom'
@@ -66,7 +67,9 @@ const Sidebar = () => {
                                     {index === 0 && <MdOutlineSpaceDashboard />}
                                     {index === 1 && <RiBox1Line />}
                                     {index === 2 && <MdOutlineShoppingBag />}
-                                    {index === 3 && <FiUsers />} {item.title}
+                                    {index === 3 && <FiUsers />}
+                                    {index === 4 && <IoChatboxEllipsesOutline />}
+                                    {item.title}
                                 </div>{' '}
                                 {item.items && pageIndex === index && <IoIosArrowDown className=' text-[15px]' />}
                                 {item.items && pageIndex !== index && <IoIosArrowBack className=' text-[15px]' />}
