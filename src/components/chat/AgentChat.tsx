@@ -5,7 +5,7 @@ import MDSpinner from 'react-md-spinner'
 const config = {
     appID: '2625228e90b6d2ce',
     agentUID: '1723871226111',
-    server: 'http://localhost:5000'
+    server: 'https://server-test-dunks-projects.vercel.app'
 }
 
 const agentUID = config.agentUID
